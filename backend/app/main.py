@@ -10,7 +10,6 @@ from .models import User
 from .routers.auth import get_password_hash
 import os
 
-# Create database tables
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
@@ -19,7 +18,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Mount static files and templates
 static_path = os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "static")
 templates_path = os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "templates")
 
@@ -31,7 +29,6 @@ if os.path.exists(templates_path):
 else:
     jinja_env = None
 
-# Include routers
 app.include_router(students.router)
 app.include_router(reports.router)
 app.include_router(evaluations.router)
@@ -45,14 +42,12 @@ async def startup_event():
     try:
         RubricService.initialize_default_rubrics(db)
         
-        # Create default demo user if it doesn't exist
         existing_user = db.query(User).filter(
             (User.email == "demo@test.de") | (User.username == "demo")
         ).first()
         
         if not existing_user:
             try:
-                # Use direct bcrypt for password hashing
                 import bcrypt
                 password = "demo123"
                 password_bytes = password.encode('utf-8')

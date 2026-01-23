@@ -65,7 +65,6 @@ def create_evaluation(evaluation: EvaluationCreate, db: Session = Depends(get_db
     """Create a new manual evaluation"""
     evaluation_obj = evaluation_service.create_evaluation(db, evaluation)
     
-    # Reload with relationships
     db.refresh(evaluation_obj)
     return format_evaluation_response(evaluation_obj)
 
@@ -73,6 +72,7 @@ def create_evaluation(evaluation: EvaluationCreate, db: Session = Depends(get_db
 @router.post("/llm", response_model=EvaluationResponse)
 def create_llm_evaluation(request: LLMEvaluationRequest, db: Session = Depends(get_db)):
     """Create an evaluation using language model"""
+    import traceback
     try:
         evaluation = evaluation_service.evaluate_with_llm(
             db,
@@ -84,8 +84,12 @@ def create_llm_evaluation(request: LLMEvaluationRequest, db: Session = Depends(g
         if not evaluation:
             raise HTTPException(status_code=500, detail="Language model evaluation failed")
         return format_evaluation_response(evaluation)
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        error_detail = str(e)
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Language model evaluation failed: {error_detail}")
 
 
 @router.post("/rule-based", response_model=EvaluationResponse)

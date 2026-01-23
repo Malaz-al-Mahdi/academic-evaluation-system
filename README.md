@@ -7,7 +7,7 @@ A centralized, web-based evaluation tool for assessing academic submissions with
 - **Student Data Management**: Collect and store student information (name, matriculation number)
 - **Report Type Selection**: Support for multiple report types (Research-driven, Design-driven, ML/NLP, Seminar reports)
 - **Structured Rubrics**: Predefined grading rubrics with multiple sections and point allocations
-- **Flexible Evaluation**: Manual, rule-based, or language model-assisted evaluation
+- **Flexible Evaluation**: Manual, rule-based, or language model-assisted evaluation with criteria-based assessment
 - **Report Generation**: Automatic generation of HTML/PDF evaluation reports
 - **Rubric Management**: Hardcoded rubrics or dynamic loading from CSV/Excel files
 - **Containerized**: Fully dockerized application for easy deployment
