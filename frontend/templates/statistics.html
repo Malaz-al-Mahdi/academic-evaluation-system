@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics - EduTec</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-graduation-cap"></i> EduTec</h1>
+            <nav>
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/evaluate"><i class="fas fa-clipboard-check"></i> Grade Report</a>
+                <a href="/statistics" class="active"><i class="fas fa-chart-bar"></i> Statistics</a>
+                <a href="/admin"><i class="fas fa-cog"></i> Admin</a>
+            </nav>
+            <div class="user-info">
+                <span id="username"><i class="fas fa-user"></i> Guest</span>
+                <button id="logoutBtn" style="display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; margin-left: 1rem;" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                <a href="/imprint">Imprint</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2><i class="fas fa-chart-bar"></i> Report Type Statistics</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                Average scores and statistics for each report type
+            </p>
+            <div style="margin-bottom: 2rem;">
+                <a href="/student-history" class="btn btn-secondary">
+                    <i class="fas fa-history"></i> View Student History
+                </a>
+            </div>
+
+            <div id="statisticsContainer" style="display: grid; gap: 1.5rem; margin-top: 2rem;">
+                <!-- Statistics will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login';
+            }
+        })();
+    </script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/statistics.js"></script>
+</body>
+</html>

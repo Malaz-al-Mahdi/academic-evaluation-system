@@ -1,0 +1,150 @@
+{
+  "Research-Driven Thesis": [
+    {
+      "section_name": "General Aspects",
+      "max_points": 30,
+      "description": "Overall quality, structure, writing, and presentation",
+      "criteria": {
+        "10-9": "Excellent structure, clear writing, professional presentation",
+        "8-7": "Good structure and writing, minor issues",
+        "6-5": "Adequate structure, some clarity issues",
+        "4-3": "Poor structure, unclear writing",
+        "0-2": "Very poor quality, major issues"
+      },
+      "order": 1
+    },
+    {
+      "section_name": "Theory & Framework, Literature Review or Research Questions",
+      "max_points": 30,
+      "description": "Quality of theoretical foundation and literature review",
+      "criteria": {
+        "10-9": "Comprehensive, well-structured, critical analysis",
+        "8-7": "Good coverage, adequate analysis",
+        "6-5": "Basic coverage, limited analysis",
+        "4-3": "Insufficient coverage, weak analysis",
+        "0-2": "Very poor or missing"
+      },
+      "order": 2
+    },
+    {
+      "section_name": "Research",
+      "max_points": 40,
+      "description": "Research methodology, execution, and results",
+      "criteria": {
+        "10-9": "Rigorous methodology, well-executed, clear results",
+        "8-7": "Good methodology, adequate execution",
+        "6-5": "Basic methodology, some issues",
+        "4-3": "Weak methodology, poor execution",
+        "0-2": "Very poor or missing"
+      },
+      "order": 3
+    }
+  ],
+  "Design-Driven and Small Evaluation Thesis": [
+    {
+      "section_name": "General Aspects",
+      "max_points": 30,
+      "description": "Overall quality, structure, writing, and presentation",
+      "order": 1
+    },
+    {
+      "section_name": "System Development",
+      "max_points": 50,
+      "description": "Design, implementation, and functionality of the system",
+      "order": 2
+    },
+    {
+      "section_name": "Evaluation",
+      "max_points": 20,
+      "description": "Evaluation methodology and results",
+      "order": 3
+    }
+  ],
+  "Design-Driven Thesis": [
+    {
+      "section_name": "General Aspects",
+      "max_points": 30,
+      "description": "Overall quality, structure, writing, and presentation",
+      "order": 1
+    },
+    {
+      "section_name": "System Development",
+      "max_points": 70,
+      "description": "Design, implementation, and functionality of the system",
+      "order": 2
+    }
+  ],
+  "Machine Learning or NLP-Based Theses": [
+    {
+      "section_name": "General Aspects",
+      "max_points": 30,
+      "description": "Overall quality, structure, writing, and presentation",
+      "order": 1
+    },
+    {
+      "section_name": "Modeling",
+      "max_points": 50,
+      "description": "Model design, architecture, and implementation",
+      "order": 2
+    },
+    {
+      "section_name": "Evaluation",
+      "max_points": 20,
+      "description": "Evaluation methodology, metrics, and results",
+      "order": 3
+    }
+  ],
+  "Seminar Report": [
+    {
+      "section_name": "Introduction",
+      "max_points": 10,
+      "description": "Introduction is engaging, clear, and well-developed",
+      "criteria": {
+        "10-9": "Introduction is engaging, clear, and well-developed",
+        "8-7": "Introduction is clear and informative, with relevant context",
+        "6-5": "Introduction identifies the topic, but the context is basic or unclear",
+        "4-3": "Introduction is unclear or weak. Topic is mentioned but lacks",
+        "0-2": "Introduction is very poor or unrelated. Minimal content, no clear topic"
+      },
+      "order": 1
+    },
+    {
+      "section_name": "Project overview & objectives",
+      "max_points": 20,
+      "description": "Clear project overview and well-defined objectives",
+      "order": 2
+    },
+    {
+      "section_name": "System requirements",
+      "max_points": 10,
+      "description": "Comprehensive system requirements specification",
+      "order": 3
+    },
+    {
+      "section_name": "Core functionality & feature implementation",
+      "max_points": 20,
+      "description": "Implementation of core features and functionality",
+      "order": 4
+    },
+    {
+      "section_name": "System design",
+      "max_points": 15,
+      "description": "Architecture and design decisions",
+      "order": 5
+    },
+    {
+      "section_name": "Results, challenges & discussion",
+      "max_points": 15,
+      "description": "Results presentation, challenges faced, and discussion",
+      "order": 6
+    },
+    {
+      "section_name": "Outlook (conclusion, limitation, future work)",
+      "max_points": 10,
+      "description": "Conclusion, limitations, and future work",
+      "order": 7
+    }
+  ]
+}
+
+

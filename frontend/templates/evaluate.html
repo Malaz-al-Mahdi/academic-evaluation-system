@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluate Report - EduTec</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-graduation-cap"></i> EduTec</h1>
+            <nav>
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/evaluate" class="active"><i class="fas fa-clipboard-check"></i> Grade Report</a>
+                <a href="/statistics"><i class="fas fa-chart-bar"></i> Statistics</a>
+                <a href="/admin"><i class="fas fa-cog"></i> Admin</a>
+            </nav>
+            <div class="user-info">
+                <span id="username"><i class="fas fa-user"></i> Guest</span>
+                <a href="/imprint">Imprint</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Student and Report Details</h2>
+            <p class="required-note">*Required fields</p>
+
+            <form id="evaluationForm">
+                <div class="form-section">
+                    <h3>Student Data</h3>
+                    <div class="form-group">
+                        <label for="firstName">First name *</label>
+                        <input type="text" id="firstName" name="firstName" placeholder="Student name.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last name *</label>
+                        <input type="text" id="lastName" name="lastName" placeholder="Student last name.." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="matriculationNumber">Matriculation number *</label>
+                        <input type="text" id="matriculationNumber" name="matriculationNumber" placeholder="Student MN" minlength="7" maxlength="7" pattern="[0-9]{7}" required>
+                        <small>Must be exactly 7 digits</small>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Report Data</h3>
+                    <div class="form-row">
+                        <div class="form-group form-group-half">
+                            <label for="reportCategory">Report: *</label>
+                            <div class="select-wrapper">
+                                <select id="reportCategory" name="reportCategory" required>
+                                    <option value="">Select report</option>
+                                    <option value="bachelor">Bachelor Thesis</option>
+                                    <option value="master">Master Thesis</option>
+                                    <option value="seminar">Seminar Report</option>
+                                    <option value="research">Research Project</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-half">
+                            <label for="reportType">[1] Report type: *</label>
+                            <div class="select-wrapper">
+                                <select id="reportType" name="reportType" required>
+                                    <option value="">Select report type</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reportTitle">Title *</label>
+                        <input type="text" id="reportTitle" name="reportTitle" placeholder="Student report title.." maxlength="320" required>
+                        <small>[max 320 characters]</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="oberseminarDate">Oberseminar date</label>
+                        <input type="date" id="oberseminarDate" name="oberseminarDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="oberseminarTime">Oberseminar time</label>
+                        <input type="time" id="oberseminarTime" name="oberseminarTime">
+                    </div>
+                </div>
+
+                <button type="button" id="continueBtn" class="btn btn-primary" disabled style="pointer-events: auto;">Continue</button>
+                <p class="help-text">The 'Continue' button enables once all required fields are filled.</p>
+            </form>
+
+            <div id="reportTypesInfo" class="info-box" style="display: none;">
+                <h3>Report Types</h3>
+                <div id="reportTypesList"></div>
+            </div>
+
+            <div id="rubricsSection" style="display: none;">
+                <h2><i class="fas fa-list-check"></i> Evaluation Rubrics</h2>
+                <div class="evaluation-method">
+                    <label><i class="fas fa-magic"></i> Evaluation Method:</label>
+                    <select id="evaluationMethod">
+                        <option value="manual"><i class="fas fa-hand-pointer"></i> Manual</option>
+                        <option value="rule-based"><i class="fas fa-robot"></i> Rule-based</option>
+                        <option value="llm"><i class="fas fa-brain"></i> Language model-assisted</option>
+                    </select>
+                </div>
+                <div id="rubricsContainer"></div>
+                <div id="reportContentSection" style="display: none;">
+                    <h3>Report Content (for automated evaluation)</h3>
+                    <textarea id="reportContent" rows="10" placeholder="Paste report content here..."></textarea>
+                </div>
+                <button type="button" id="submitEvaluation" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Submit Evaluation
+                </button>
+            </div>
+
+            <div id="resultsSection" style="display: none;">
+                <h2>Evaluation Results</h2>
+                <div id="resultsContent"></div>
+                <div class="action-buttons">
+                    <button type="button" id="downloadHTML" class="btn btn-secondary">
+                        <i class="fas fa-file-code"></i> Download HTML Report
+                    </button>
+                    <button type="button" id="downloadPDF" class="btn btn-secondary">
+                        <i class="fas fa-file-pdf"></i> Download PDF Report
+                    </button>
+                    <button type="button" id="newEvaluation" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Evaluation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Check authentication immediately
+        (function() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login';
+            }
+        })();
+    </script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/evaluate.js"></script>
+</body>
+</html>
+

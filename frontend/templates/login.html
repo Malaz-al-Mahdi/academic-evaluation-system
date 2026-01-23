@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EduTec Evaluation Tool</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1><i class="fas fa-graduation-cap"></i> EduTec</h1>
+                <p>Academic Evaluation Tool</p>
+            </div>
+            
+            <form id="loginForm" class="login-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" name="email" placeholder="demo@test.de" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="demo123" required>
+                        <button type="button" id="togglePassword" class="password-toggle" aria-label="Show password">
+                            <i class="fas fa-eye" id="passwordIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="button" id="loginBtn" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                
+                <div id="loginError" class="error-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // If already logged in, redirect to home
+        (function() {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                // Verify token is still valid
+                fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else {
+                        localStorage.removeItem('access_token');
+                        localStorage.removeItem('user_info');
+                    }
+                })
+                .catch(() => {
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('user_info');
+                });
+            }
+        })();
+    </script>
+    <script>
+        // Initialize password toggle immediately when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const toggleBtn = document.getElementById('togglePassword');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordInput && toggleBtn && passwordIcon) {
+                console.log('Initializing password toggle...');
+                
+                toggleBtn.onclick = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        passwordIcon.className = 'fas fa-eye-slash';
+                        toggleBtn.setAttribute('title', 'Hide password');
+                        console.log('Password shown');
+                    } else {
+                        passwordInput.type = 'password';
+                        passwordIcon.className = 'fas fa-eye';
+                        toggleBtn.setAttribute('title', 'Show password');
+                        console.log('Password hidden');
+                    }
+                };
+                
+                console.log('Password toggle initialized');
+            } else {
+                console.error('Password toggle elements not found');
+            }
+        });
+    </script>
+    <script>
+        // Ensure login.js runs first and is loaded
+        console.log('Login page scripts loading...');
+    </script>
+    <script src="/static/js/login.js"></script>
+    <script>
+        // Verify login.js loaded
+        console.log('All scripts loaded. Login form should be ready.');
+    </script>
+</body>
+</html>
+
