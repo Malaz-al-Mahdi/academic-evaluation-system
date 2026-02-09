@@ -101,8 +101,14 @@ async def login_page(request: Request):
 
 @app.get("/evaluate", response_class=HTMLResponse)
 async def evaluate_page(request: Request):
-    """Serve the evaluation page"""
+    """Serve the evaluation page (step 1: student and report details)"""
     return HTMLResponse(content=render_template("evaluate.html"))
+
+
+@app.get("/evaluate-step2", response_class=HTMLResponse)
+async def evaluate_step2_page(request: Request):
+    """Serve the evaluation step 2 page (rubrics and submit)"""
+    return HTMLResponse(content=render_template("evaluate_step2.html"))
 
 
 @app.get("/admin", response_class=HTMLResponse)

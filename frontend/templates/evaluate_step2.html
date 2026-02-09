@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluate Report - Step 2 - EduTec</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-graduation-cap"></i> EduTec</h1>
+            <nav>
+                <a href="/"><i class="fas fa-home"></i> Home</a>
+                <a href="/evaluate" class="active"><i class="fas fa-clipboard-check"></i> Grade Report</a>
+                <a href="/statistics"><i class="fas fa-chart-bar"></i> Statistics</a>
+                <a href="/admin"><i class="fas fa-cog"></i> Admin</a>
+            </nav>
+            <div class="user-info">
+                <span id="username"><i class="fas fa-user"></i> Guest</span>
+                <a href="/imprint">Imprint</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="step2Info" class="info-box" style="margin-bottom: 1.5rem;">
+                <h3><i class="fas fa-info-circle"></i> Evaluation</h3>
+                <p id="step2StudentReport" style="margin: 0; color: var(--text-secondary);"></p>
+                <a href="/evaluate" class="btn btn-secondary" style="margin-top: 0.75rem; display: inline-block;">
+                    <i class="fas fa-arrow-left"></i> Back to details
+                </a>
+            </div>
+
+            <div id="rubricsSection">
+                <h2><i class="fas fa-list-check"></i> Evaluation Rubrics</h2>
+                <div class="evaluation-method">
+                    <label><i class="fas fa-magic"></i> Evaluation Method:</label>
+                    <select id="evaluationMethod">
+                        <option value="manual"><i class="fas fa-hand-pointer"></i> Manual</option>
+                        <option value="rule-based"><i class="fas fa-robot"></i> Rule-based</option>
+                        <option value="llm"><i class="fas fa-brain"></i> Language model-assisted</option>
+                    </select>
+                </div>
+                <div id="rubricsContainer"></div>
+                <div id="reportContentSection" style="display: none;">
+                    <h3>Report Content (for automated evaluation)</h3>
+                    <textarea id="reportContent" rows="10" placeholder="Paste report content here..."></textarea>
+                </div>
+                <button type="button" id="submitEvaluation" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Submit Evaluation
+                </button>
+            </div>
+
+            <div id="resultsSection" style="display: none;">
+                <h2>Evaluation Results</h2>
+                <div id="resultsContent"></div>
+                <div class="action-buttons">
+                    <button type="button" id="downloadHTML" class="btn btn-secondary">
+                        <i class="fas fa-file-code"></i> Download HTML Report
+                    </button>
+                    <button type="button" id="downloadPDF" class="btn btn-secondary">
+                        <i class="fas fa-file-pdf"></i> Download PDF Report
+                    </button>
+                    <button type="button" id="newEvaluation" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Evaluation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function() {
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = '/login';
+            }
+        })();
+    </script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/evaluate_step2.js"></script>
+</body>
+</html>

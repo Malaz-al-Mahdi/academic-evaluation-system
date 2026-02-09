@@ -7,6 +7,12 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
+# Docker: backend is mounted at /app/backend, so .env is at /app/backend/.env
+# override=True so .env overrides empty OPENAI_API_KEY set by compose
+for path in ("/app/backend/.env", "/app/.env", os.path.join(os.path.dirname(__file__), "..", "..", ".env")):
+    if path and os.path.isfile(path):
+        load_dotenv(path, override=True)
+        break
 
 
 class EvaluationService:
@@ -88,6 +94,13 @@ class EvaluationService:
         
         if not self.openai_client:
             api_key = os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                for env_path in ("/app/backend/.env", os.path.join(os.path.dirname(__file__), "..", "..", ".env")):
+                    if env_path and os.path.isfile(env_path):
+                        load_dotenv(env_path, override=True)
+                        api_key = os.getenv("OPENAI_API_KEY")
+                        if api_key:
+                            break
             if not api_key:
                 raise Exception("OpenAI API key not configured. Please set OPENAI_API_KEY environment variable.")
             
