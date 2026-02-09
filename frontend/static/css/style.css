@@ -107,6 +107,21 @@ nav a.active {
     gap: 0.5rem;
 }
 
+.user-info .logout-btn {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+.user-info .logout-btn:hover {
+    text-decoration: underline;
+}
+
 .dropdown {
     cursor: pointer;
 }

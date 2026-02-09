@@ -19,6 +19,41 @@ const API_BASE = '/api';
     console.log('Token found, verifying...');
 })();
 
+// Update username and logout button on every page that has them
+function updateHeaderAuth() {
+    if (window.location.pathname === '/login' || window.location.pathname === '/login.html') return;
+    const logoutBtn = document.getElementById('logoutBtn');
+    const usernameEl = document.getElementById('username');
+    const token = localStorage.getItem('access_token');
+    if (!token) return;
+    if (logoutBtn) {
+        logoutBtn.style.display = 'inline-block';
+        logoutBtn.onclick = () => {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user_info');
+            window.location.href = '/login';
+        };
+    }
+    if (usernameEl) {
+        fetch('/api/auth/me', {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        })
+            .then(res => res.ok ? res.json() : Promise.reject(new Error('Invalid token')))
+            .then(userInfo => {
+                usernameEl.innerHTML = `<i class="fas fa-user"></i> ${userInfo.email || userInfo.username || 'User'}`;
+            })
+            .catch(() => {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('user_info');
+                window.location.href = '/login';
+            });
+    }
+}
+// Run on load: immediately (script is at end of body, DOM is ready) and on DOMContentLoaded as fallback
+updateHeaderAuth();
+document.addEventListener('DOMContentLoaded', updateHeaderAuth);
+
 // Utility functions
 async function apiCall(endpoint, options = {}) {
     try {

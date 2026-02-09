@@ -322,7 +322,7 @@ async function handleContinue() {
         continueBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
     }
     
-    // Create or get student
+    // Create or get student, then redirect to step 2
     try {
         console.log('Creating student...');
         const student = await apiCall('/students/', {
@@ -335,28 +335,24 @@ async function handleContinue() {
         });
         
         console.log('Student created:', student);
-        currentStudentId = student.id;
-        currentReportType = parseInt(reportType);
+        const reportTypeSelect = document.getElementById('reportType');
+        const reportTypeName = reportTypeSelect && reportTypeSelect.options[reportTypeSelect.selectedIndex]
+            ? reportTypeSelect.options[reportTypeSelect.selectedIndex].text
+            : '';
         
-        // Load rubrics
-        console.log('Loading rubrics for report type:', currentReportType);
-        await loadRubrics(currentReportType);
-        
-        // Show success message
-        showSuccess('Student created successfully! Please fill in the evaluation rubrics below.');
-        
-        // Show rubrics section
-        const rubricsSection = document.getElementById('rubricsSection');
-        if (rubricsSection) {
-            rubricsSection.style.display = 'block';
-            rubricsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        
-        // Re-enable button
-        if (continueBtn) {
-            continueBtn.disabled = false;
-            continueBtn.innerHTML = 'Continue';
-        }
+        const step2Data = {
+            studentId: student.id,
+            reportTypeId: parseInt(reportType),
+            reportTitle: formData.get('reportTitle'),
+            oberseminarDate: formData.get('oberseminarDate') || null,
+            oberseminarTime: formData.get('oberseminarTime') || null,
+            studentFirstName: firstName,
+            studentLastName: lastName,
+            reportTypeName: reportTypeName
+        };
+        sessionStorage.setItem('evaluationStep2Data', JSON.stringify(step2Data));
+        window.location.href = '/evaluate-step2';
+        return;
         
     } catch (error) {
         console.error('Error in handleContinue:', error);
@@ -374,6 +370,7 @@ async function loadRubrics(reportTypeId) {
     try {
         currentRubrics = await apiCall(`/report-types/${reportTypeId}/rubrics`);
         const container = document.getElementById('rubricsContainer');
+        if (!container) return;
         container.innerHTML = '';
         
         currentRubrics.forEach((rubric, index) => {
