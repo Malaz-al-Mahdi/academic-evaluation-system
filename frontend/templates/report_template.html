@@ -1,112 +1,187 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Evaluation Report - {{ evaluation.report_title }}</title>
     <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        
         body { 
-            font-family: Arial, sans-serif; 
-            margin: 40px; 
-            line-height: 1.6;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+            color: #333;
+            font-size: 11pt;
         }
-        h1 { 
-            color: #333; 
-            border-bottom: 2px solid #333; 
-            padding-bottom: 10px;
+        
+        .logo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+            margin-bottom: 20px;
         }
+        
+        .logo-header img {
+            max-height: 50px;
+            max-width: 150px;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 18pt;
+            margin: 20px 0;
+            color: #333;
+        }
+        
         h2 {
+            font-size: 12pt;
+            color: #333;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        
+        .info-table {
+            width: 100%;
+            margin: 15px 0;
+            border-collapse: collapse;
+        }
+        
+        .info-table td {
+            padding: 8px 10px;
+            vertical-align: top;
+        }
+        
+        .info-table .label {
+            font-weight: bold;
+            width: 180px;
             color: #555;
-            margin-top: 30px;
         }
-        .header { 
-            border-bottom: 2px solid #333; 
-            padding-bottom: 20px; 
-            margin-bottom: 30px; 
-        }
-        .section { 
-            margin: 20px 0; 
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-left: 4px solid #0066cc;
-        }
-        .score { 
-            font-weight: bold; 
-            color: #0066cc; 
-            font-size: 1.1em;
-        }
-        .total { 
-            font-size: 1.2em; 
-            margin-top: 30px; 
-            padding: 20px;
-            background-color: #e8f4f8;
-            border: 2px solid #0066cc;
-            border-radius: 5px;
-        }
-        table {
+        
+        .scores-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 15px 0;
         }
-        th, td {
-            padding: 12px;
+        
+        .scores-table th {
+            background: #f5f5f5;
+            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border: 1px solid #ddd;
+            font-weight: bold;
         }
-        th {
-            background-color: #0066cc;
-            color: white;
+        
+        .scores-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
         }
-        tr:hover {
-            background-color: #f5f5f5;
+        
+        .scores-table tr:nth-child(even) {
+            background: #fafafa;
+        }
+        
+        .total-box {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+        }
+        
+        .total-box .score {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Academic Evaluation Report</h1>
-        <p><strong>Student:</strong> {{ evaluation.student.first_name }} {{ evaluation.student.last_name }}</p>
-        <p><strong>Matriculation Number:</strong> {{ evaluation.student.matriculation_number }}</p>
-        <p><strong>Report Title:</strong> {{ evaluation.report_title }}</p>
-        <p><strong>Report Type:</strong> {{ evaluation.report_type.name }}</p>
-        {% if evaluation.oberseminar_date %}
-        <p><strong>Oberseminar Date:</strong> {{ evaluation.oberseminar_date }}</p>
-        {% endif %}
-        {% if evaluation.oberseminar_time %}
-        <p><strong>Oberseminar Time:</strong> {{ evaluation.oberseminar_time }}</p>
-        {% endif %}
+    <div class="logo-header">
+        <img src="file:///app/frontend/static/images/dipf_logo.png" alt="DIPF" onerror="this.style.display='none'">
+        <img src="file:///app/frontend/static/images/goethe_logo.png" alt="Goethe University" onerror="this.style.display='none'">
     </div>
     
-    <h2>Evaluation Details</h2>
-    <table>
+    <h1>Academic Evaluation Report</h1>
+    
+    <h2>Student Information</h2>
+    <table class="info-table">
+        <tr>
+            <td class="label">Student Name:</td>
+            <td>{{ evaluation.student.first_name }} {{ evaluation.student.last_name }}</td>
+        </tr>
+        <tr>
+            <td class="label">Matriculation Number:</td>
+            <td>{{ evaluation.student.matriculation_number }}</td>
+        </tr>
+        <tr>
+            <td class="label">Report Title:</td>
+            <td>{{ evaluation.report_title }}</td>
+        </tr>
+        <tr>
+            <td class="label">Report Type:</td>
+            <td>{{ evaluation.report_type.name }}</td>
+        </tr>
+        {% if evaluation.oberseminar_date %}
+        <tr>
+            <td class="label">Oberseminar Date:</td>
+            <td>{{ evaluation.oberseminar_date }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td class="label">Evaluation Method:</td>
+            <td>{{ evaluation.evaluation_method | capitalize }}</td>
+        </tr>
+        <tr>
+            <td class="label">Evaluation Date:</td>
+            <td>{{ evaluation.created_at.strftime("%d.%m.%Y") if evaluation.created_at else "N/A" }}</td>
+        </tr>
+    </table>
+    
+    <h2>Evaluation Results</h2>
+    <table class="scores-table">
         <thead>
             <tr>
-                <th>Section</th>
-                <th>Score</th>
-                <th>Max Points</th>
+                <th>Criteria</th>
+                <th style="width: 100px;">Score</th>
                 <th>Feedback</th>
             </tr>
         </thead>
         <tbody>
             {% for score in evaluation.scores %}
             <tr>
-                <td><strong>{{ score.rubric.section_name }}</strong></td>
-                <td class="score">{{ score.score }} / {{ score.rubric.max_points }}</td>
-                <td>{{ score.rubric.max_points }}</td>
-                <td>{{ score.feedback or "No feedback provided" }}</td>
+                <td>{{ score.rubric.section_name }}</td>
+                <td>{{ "%.1f"|format(score.score) }} / {{ "%.1f"|format(score.rubric.max_points) }}</td>
+                <td>{{ score.feedback or "-" }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     
-    <div class="total">
-        <h2>Total Score</h2>
-        <p><strong>{{ evaluation.total_score }} / {{ evaluation.max_possible_score }}</strong></p>
-        <p><strong>Percentage:</strong> {{ "%.2f"|format((evaluation.total_score / evaluation.max_possible_score * 100) if evaluation.max_possible_score > 0 else 0) }}%</p>
-        <p><strong>Evaluation Method:</strong> {{ evaluation.evaluation_method }}</p>
-        <p><strong>Date:</strong> {{ evaluation.created_at.strftime("%Y-%m-%d %H:%M:%S") if evaluation.created_at else "N/A" }}</p>
+    {% set percentage = (evaluation.total_score / evaluation.max_possible_score * 100) if evaluation.max_possible_score > 0 else 0 %}
+    
+    <div class="total-box">
+        <strong>Total Score:</strong> 
+        <span class="score">{{ "%.1f"|format(evaluation.total_score) }} / {{ "%.1f"|format(evaluation.max_possible_score) }} ({{ "%.1f"|format(percentage) }}%)</span>
+    </div>
+    
+    <div class="footer">
+        <p>EduTec - Academic Evaluation System</p>
+        <p>Goethe University Frankfurt &bull; DIPF | Leibniz Institute for Research and Information in Education</p>
     </div>
 </body>
 </html>
-
-
-
-

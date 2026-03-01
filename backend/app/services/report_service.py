@@ -88,6 +88,7 @@ class ReportService:
         from ..models import EvaluationScore
         from weasyprint import HTML, CSS
         from datetime import datetime
+        import base64
         
         evaluation = db.query(Evaluation)\
             .options(joinedload(Evaluation.student),
@@ -104,6 +105,19 @@ class ReportService:
         
         # Generate HTML report first
         html_content = ReportService.generate_html_report(db, evaluation_id)
+        
+        # Embed logos as base64 for PDF generation
+        logo_paths = {
+            'dipf_logo.png': os.path.join(os.path.dirname(__file__), "..", "..", "..", "frontend", "static", "images", "dipf_logo.png"),
+            'goethe_logo.png': os.path.join(os.path.dirname(__file__), "..", "..", "..", "frontend", "static", "images", "goethe_logo.png")
+        }
+        
+        for logo_name, logo_path in logo_paths.items():
+            if os.path.exists(logo_path):
+                with open(logo_path, "rb") as img_file:
+                    base64_data = base64.b64encode(img_file.read()).decode('utf-8')
+                    data_uri = f"data:image/png;base64,{base64_data}"
+                    html_content = html_content.replace(f"file:///app/frontend/static/images/{logo_name}", data_uri)
         
         # Convert HTML to PDF using WeasyPrint
         HTML(string=html_content).write_pdf(output_path)

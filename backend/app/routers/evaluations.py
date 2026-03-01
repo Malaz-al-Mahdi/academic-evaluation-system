@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from ..database import get_db
-from ..models import Evaluation
+from ..models import Evaluation, EvaluationScore, User
 from ..schemas import EvaluationCreate, EvaluationResponse, RubricWithScores
 from ..services.evaluation_service import EvaluationService
 from ..services.report_service import ReportService
+from ..routers.auth import get_current_user
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/api/evaluations", tags=["evaluations"])
@@ -60,17 +61,32 @@ class RuleBasedEvaluationRequest(BaseModel):
     report_content: str
 
 
+@router.get("/my", response_model=List[EvaluationResponse])
+def get_my_evaluations(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Get all evaluations created by the current user"""
+    evaluations = db.query(Evaluation)\
+        .options(
+            joinedload(Evaluation.student),
+            joinedload(Evaluation.report_type),
+            joinedload(Evaluation.scores).joinedload(EvaluationScore.rubric)
+        )\
+        .filter(Evaluation.evaluator_id == current_user.id)\
+        .order_by(Evaluation.created_at.desc())\
+        .all()
+    return [format_evaluation_response(e) for e in evaluations]
+
+
 @router.post("/", response_model=EvaluationResponse)
-def create_evaluation(evaluation: EvaluationCreate, db: Session = Depends(get_db)):
+def create_evaluation(evaluation: EvaluationCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Create a new manual evaluation"""
-    evaluation_obj = evaluation_service.create_evaluation(db, evaluation)
+    evaluation_obj = evaluation_service.create_evaluation(db, evaluation, evaluator_id=current_user.id)
     
     db.refresh(evaluation_obj)
     return format_evaluation_response(evaluation_obj)
 
 
 @router.post("/llm", response_model=EvaluationResponse)
-def create_llm_evaluation(request: LLMEvaluationRequest, db: Session = Depends(get_db)):
+def create_llm_evaluation(request: LLMEvaluationRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Create an evaluation using language model"""
     import traceback
     try:
@@ -79,7 +95,8 @@ def create_llm_evaluation(request: LLMEvaluationRequest, db: Session = Depends(g
             request.student_id,
             request.report_type_id,
             request.report_title,
-            request.report_content
+            request.report_content,
+            evaluator_id=current_user.id
         )
         if not evaluation:
             raise HTTPException(status_code=500, detail="Language model evaluation failed")
@@ -93,7 +110,7 @@ def create_llm_evaluation(request: LLMEvaluationRequest, db: Session = Depends(g
 
 
 @router.post("/rule-based", response_model=EvaluationResponse)
-def create_rule_based_evaluation(request: RuleBasedEvaluationRequest, db: Session = Depends(get_db)):
+def create_rule_based_evaluation(request: RuleBasedEvaluationRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Create a rule-based evaluation"""
     try:
         evaluation = evaluation_service.evaluate_rule_based(
@@ -101,7 +118,8 @@ def create_rule_based_evaluation(request: RuleBasedEvaluationRequest, db: Sessio
             request.student_id,
             request.report_type_id,
             request.report_title,
-            request.report_content
+            request.report_content,
+            evaluator_id=current_user.id
         )
         if not evaluation:
             raise HTTPException(status_code=500, detail="Rule-based evaluation failed")

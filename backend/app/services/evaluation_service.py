@@ -64,7 +64,7 @@ class EvaluationService:
 
     def evaluate_with_llm(
         self, db: Session, student_id: int, report_type_id: int, 
-        report_title: str, report_content: str
+        report_title: str, report_content: str, evaluator_id: Optional[int] = None
     ) -> Optional[Evaluation]:
         """Evaluate using language model based on defined criteria"""
         try:
@@ -334,7 +334,7 @@ Format your response as valid JSON:
                 scores=evaluation_scores
             )
             
-            return self.create_evaluation(db, evaluation_data)
+            return self.create_evaluation(db, evaluation_data, evaluator_id=evaluator_id)
             
         except json.JSONDecodeError as e:
             error_msg = f"Failed to parse LLM response as JSON: {str(e)}"
@@ -352,7 +352,7 @@ Format your response as valid JSON:
 
     def evaluate_rule_based(
         self, db: Session, student_id: int, report_type_id: int,
-        report_title: str, report_content: str
+        report_title: str, report_content: str, evaluator_id: Optional[int] = None
     ) -> Optional[Evaluation]:
         """Evaluate using rule-based approach (simple keyword matching)"""
         rubrics = db.query(Rubric).filter(
@@ -414,7 +414,7 @@ Format your response as valid JSON:
             scores=evaluation_scores
         )
         
-        return self.create_evaluation(db, evaluation_data)
+        return self.create_evaluation(db, evaluation_data, evaluator_id=evaluator_id)
 
     def get_evaluation(self, db: Session, evaluation_id: int) -> Optional[Evaluation]:
         """Get evaluation by ID with relationships"""

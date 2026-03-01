@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student History - EduTec</title>
+    <title>My Evaluations - EduTec</title>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -14,60 +14,46 @@
             <nav>
                 <a href="/"><i class="fas fa-home"></i> Home</a>
                 <a href="/evaluate"><i class="fas fa-clipboard-check"></i> Grade Report</a>
-                <a href="/my-evaluations"><i class="fas fa-clipboard-list"></i> My Evaluations</a>
+                <a href="/my-evaluations" class="active"><i class="fas fa-clipboard-list"></i> My Evaluations</a>
                 <a href="/statistics"><i class="fas fa-chart-bar"></i> Statistics</a>
                 <a href="/admin"><i class="fas fa-cog"></i> Admin</a>
             </nav>
             <div class="user-info">
                 <span id="username"><i class="fas fa-user"></i> Guest</span>
-                <button id="logoutBtn" style="display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; margin-left: 1rem;" title="Logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+                <button type="button" id="logoutBtn" class="logout-btn" style="display: none;" title="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
     </header>
 
     <main>
         <div class="container">
-            <h2><i class="fas fa-history"></i> Student Evaluation History</h2>
-            
-            <div class="form-section" style="margin-bottom: 2rem;">
-                <h3>Search Student</h3>
-                <div class="form-group">
-                    <label for="matriculationNumber">Matriculation Number</label>
-                    <input type="text" id="matriculationNumber" name="matriculationNumber" placeholder="Enter 7-digit matriculation number" minlength="7" maxlength="7" pattern="[0-9]{7}">
-                    <small>Enter the student's matriculation number to view their evaluation history</small>
-                </div>
-                <button type="button" id="searchBtn" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </div>
+            <h2><i class="fas fa-clipboard-list"></i> My Evaluations</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                All evaluations you have performed
+            </p>
 
-            <div id="studentInfo" style="display: none; margin-bottom: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-radius: 8px;">
-                <!-- Student info will be displayed here -->
+            <div id="loadingIndicator" style="text-align: center; padding: 2rem;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                <p style="margin-top: 1rem; color: var(--text-secondary);">Loading your evaluations...</p>
             </div>
 
             <div id="evaluationsContainer" style="display: none;">
-                <h3>Evaluation History</h3>
                 <div id="evaluationsList">
-                    <!-- Evaluations will be loaded here -->
                 </div>
             </div>
 
             <div id="noResults" style="display: none; text-align: center; padding: 3rem; color: var(--text-secondary);">
                 <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                <p>No evaluations found for this student.</p>
+                <p>You haven't performed any evaluations yet.</p>
+                <a href="/evaluate" class="btn btn-primary" style="margin-top: 1rem;">
+                    <i class="fas fa-plus-circle"></i> Start New Evaluation
+                </a>
             </div>
         </div>
     </main>
 
     <script>
-        (function() {
-            const token = localStorage.getItem('access_token');
-            if (!token) {
-                window.location.href = '/login';
-            }
-        })();
+        (function() { var t = localStorage.getItem('access_token'); if (!t) window.location.href = '/login'; })();
     </script>
     <script src="/static/js/main.js"></script>
     <script>
@@ -80,6 +66,6 @@
             if (usernameEl) { fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } }).then(function(r) { return r.ok ? r.json() : Promise.reject(); }).then(function(u) { usernameEl.innerHTML = '<i class=\"fas fa-user\"></i> ' + (u.email || u.username || 'User'); }).catch(function() { localStorage.removeItem('access_token'); localStorage.removeItem('user_info'); window.location.href = '/login'; }); }
         });
     </script>
-    <script src="/static/js/student_history.js"></script>
+    <script src="/static/js/my_evaluations.js"></script>
 </body>
 </html>

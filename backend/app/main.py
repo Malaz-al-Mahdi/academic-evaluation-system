@@ -129,6 +129,12 @@ async def student_history_page(request: Request):
     return HTMLResponse(content=render_template("student_history.html"))
 
 
+@app.get("/my-evaluations", response_class=HTMLResponse)
+async def my_evaluations_page(request: Request):
+    """Serve the my evaluations page"""
+    return HTMLResponse(content=render_template("my_evaluations.html"))
+
+
 @app.get("/health")
 def health_check():
     """Health check endpoint"""
